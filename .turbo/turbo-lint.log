@@ -1,0 +1,91 @@
+
+> @edu/web@0.1.0 lint
+> eslint
+
+
+C:\Users\babim\Desktop\New folder\apps\web\components\academic-workspace.tsx
+  19:113  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\babim\Desktop\New folder\apps\web\components\academic-workspace.tsx:19:113
+  17 |   const [allowed, setAllowed] = useState(false);
+  18 |   const [loadedClasses, setLoadedClasses] = useState<Item[]>([]); const [loadedSections, setLoadedSections] = useState<Item[]>([]);
+> 19 |   useEffect(() => { try { const roles = JSON.parse(localStorage.getItem("edu_user") ?? "{}").roles as string[]; setAllowed(roles?.some((role) => ["owner", "principal", "administrator"].includes(role)) ?? false); } catch { setAllowed(false); } }, []);
+     |                                                                                                                 ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  20 |   useEffect(() => { if (!allowed || classes.length || sections.length) return; void Promise.all([api.get<{ data: Item[] }>("/academics/classes"), api.get<{ data: Item[] }>("/academics/sections")]).then(([classResult, sectionResult]) => { setLoadedClasses(classResult.data); setLoadedSections(sectionResult.data); }).catch(() => undefined); }, [allowed, classes.length, sections.length]);
+  21 |   useEffect(() => { void api.get<{ data: Array<{ id: string; name: string; employeeId: string }> }>("/users/teachers").then((result) => setTeachers(result.data)).catch((err: unknown) => setError(err instanceof Error ? err.message : "Unable to load teacher accounts")); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  22 |   async function assign(path: string, teacherId: string) { setError(""); try { await api.put(path, { classTeacherId: teacherId || null }); await onSaved(); } catch (err) { setError(err instanceof Error ? err.message : "Unable to assign teacher"); } }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            react-hooks/set-state-in-effect
+  20:344  warning  React Hook useEffect has a missing dependency: 'api'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  react-hooks/exhaustive-deps
+  33:113  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\babim\Desktop\New folder\apps\web\components\academic-workspace.tsx:33:113
+  31 |   const [classes, setClasses] = useState<Item[]>([]); const [subjects, setSubjects] = useState<Item[]>([]); const [teachers, setTeachers] = useState<Array<{ employeeId: string; name: string }>>([]); const [allowed, setAllowed] = useState(false); const [error, setError] = useState("");
+  32 |   async function load() { try { const [allocationResult, classResult, subjectResult, teacherResult] = await Promise.all([api.get<{ data: typeof rows }>("/academics/class-subjects"), api.get<{ data: Item[] }>("/academics/classes"), api.get<{ data: Item[] }>("/academics/subjects"), api.get<{ data: Array<{ employeeId: string; name: string }> }>("/users/teachers")]); setRows(allocationResult.data); setClasses(classResult.data); setSubjects(subjectResult.data); setTeachers(teacherResult.data); } catch (err) { setError(err instanceof Error ? err.message : "Unable to load class-subject assignments"); } }
+> 33 |   useEffect(() => { try { const roles = JSON.parse(localStorage.getItem("edu_user") ?? "{}").roles as string[]; setAllowed(roles?.some((role) => ["owner", "principal", "administrator"].includes(role)) ?? false); } catch { setAllowed(false); } }, []);
+     |                                                                                                                 ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  34 |   useEffect(() => { if (allowed) void load(); }, [allowed]); // eslint-disable-line react-hooks/exhaustive-deps
+  35 |   async function create(event: React.FormEvent<HTMLFormElement>) { event.preventDefault(); const form = new FormData(event.currentTarget); setError(""); try { await api.post("/academics/class-subjects", { classId: form.get("classId"), subjectId: form.get("subjectId"), teacherId: form.get("teacherId") || null }); event.currentTarget.reset(); await load(); } catch (err) { setError(err instanceof Error ? err.message : "Unable to create assignment"); } }
+  36 |   async function reassign(id: string, teacherId: string) { try { await api.put(`/academics/class-subjects/${id}`, { teacherId: teacherId || null }); await load(); } catch (err) { setError(err instanceof Error ? err.message : "Unable to reassign teacher"); } }  react-hooks/set-state-in-effect
+  34:39   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\babim\Desktop\New folder\apps\web\components\academic-workspace.tsx:34:39
+  32 |   async function load() { try { const [allocationResult, classResult, subjectResult, teacherResult] = await Promise.all([api.get<{ data: typeof rows }>("/academics/class-subjects"), api.get<{ data: Item[] }>("/academics/classes"), api.get<{ data: Item[] }>("/academics/subjects"), api.get<{ data: Array<{ employeeId: string; name: string }> }>("/users/teachers")]); setRows(allocationResult.data); setClasses(classResult.data); setSubjects(subjectResult.data); setTeachers(teacherResult.data); } catch (err) { setError(err instanceof Error ? err.message : "Unable to load class-subject assignments"); } }
+  33 |   useEffect(() => { try { const roles = JSON.parse(localStorage.getItem("edu_user") ?? "{}").roles as string[]; setAllowed(roles?.some((role) => ["owner", "principal", "administrator"].includes(role)) ?? false); } catch { setAllowed(false); } }, []);
+> 34 |   useEffect(() => { if (allowed) void load(); }, [allowed]); // eslint-disable-line react-hooks/exhaustive-deps
+     |                                       ^^^^ Avoid calling setState() directly within an effect
+  35 |   async function create(event: React.FormEvent<HTMLFormElement>) { event.preventDefault(); const form = new FormData(event.currentTarget); setError(""); try { await api.post("/academics/class-subjects", { classId: form.get("classId"), subjectId: form.get("subjectId"), teacherId: form.get("teacherId") || null }); event.currentTarget.reset(); await load(); } catch (err) { setError(err instanceof Error ? err.message : "Unable to create assignment"); } }
+  36 |   async function reassign(id: string, teacherId: string) { try { await api.put(`/academics/class-subjects/${id}`, { teacherId: teacherId || null }); await load(); } catch (err) { setError(err instanceof Error ? err.message : "Unable to reassign teacher"); } }
+  37 |   async function remove(id: string) { try { await api.delete(`/academics/class-subjects/${id}`); await load(); } catch (err) { setError(err instanceof Error ? err.message : "Unable to delete assignment"); } }                                                                                                                                                                react-hooks/set-state-in-effect
+
+C:\Users\babim\Desktop\New folder\apps\web\components\learning-workspace.tsx
+  40:684  warning  React Hook useEffect has a missing dependency: 'api'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\babim\Desktop\New folder\apps\web\components\student-directory.tsx
+  22:396  warning  'setStatusFilter' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  22:452  warning  'setClassFilter' is assigned a value but never used   @typescript-eslint/no-unused-vars
+
+C:\Users\babim\Desktop\New folder\apps\web\components\user-management.tsx
+  54:10    error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\babim\Desktop\New folder\apps\web\components\user-management.tsx:54:10
+  52 |   useEffect(() => {
+  53 |     void Promise.all([api.get<{ data: Role[] }>("/roles"), api.get<{ data: Employee[] }>("/users/employees")]).then(([roleResult, employeeResult]) => { setRoles(roleResult.data); setEmployees(employeeResult.data); }).catch(() => undefined);
+> 54 |     void load();
+     |          ^^^^ Avoid calling setState() directly within an effect
+  55 |   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  56 |
+  57 |   function start(user?: User) { setShowForm(true); setEditing(user ?? null); setForm({ name: user?.name ?? "", email: user?.email ?? "", username: user?.username ?? "", password: "", avatarUrl: user?.avatarUrl ?? "", status: user?.status ?? "active", employeeId: user?.employeeId ?? "", roleIds: user?.roleIds ?? [] }); }  react-hooks/set-state-in-effect
+  70:2919  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @next/next/no-img-element
+
+✖ 9 problems (4 errors, 5 warnings)
+
+npm error Lifecycle script `lint` failed with error:
+npm error code 1
+npm error path C:\Users\babim\Desktop\New folder\apps\web
+npm error workspace @edu/web@0.1.0
+npm error location C:\Users\babim\Desktop\New folder\apps\web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c eslint
