@@ -62,25 +62,9 @@ C:\Users\babim\Desktop\New folder\apps\web\components\student-directory.tsx
   22:452  warning  'setClassFilter' is assigned a value but never used   @typescript-eslint/no-unused-vars
 
 C:\Users\babim\Desktop\New folder\apps\web\components\user-management.tsx
-  54:10    error    Error: Calling setState synchronously within an effect can trigger cascading renders
+  70:2919  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
 
-Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
-* Update external systems with the latest state from React.
-* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
-
-Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
-
-C:\Users\babim\Desktop\New folder\apps\web\components\user-management.tsx:54:10
-  52 |   useEffect(() => {
-  53 |     void Promise.all([api.get<{ data: Role[] }>("/roles"), api.get<{ data: Employee[] }>("/users/employees")]).then(([roleResult, employeeResult]) => { setRoles(roleResult.data); setEmployees(employeeResult.data); }).catch(() => undefined);
-> 54 |     void load();
-     |          ^^^^ Avoid calling setState() directly within an effect
-  55 |   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  56 |
-  57 |   function start(user?: User) { setShowForm(true); setEditing(user ?? null); setForm({ name: user?.name ?? "", email: user?.email ?? "", username: user?.username ?? "", password: "", avatarUrl: user?.avatarUrl ?? "", status: user?.status ?? "active", employeeId: user?.employeeId ?? "", roleIds: user?.roleIds ?? [] }); }  react-hooks/set-state-in-effect
-  70:2919  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @next/next/no-img-element
-
-✖ 9 problems (4 errors, 5 warnings)
+✖ 8 problems (3 errors, 5 warnings)
 
 npm error Lifecycle script `lint` failed with error:
 npm error code 1
